@@ -1,21 +1,22 @@
 export const generateImage = async (prompt) => {
   const apiUrl = import.meta.env.VITE_API_URL
   const apiKey = import.meta.env.VITE_API_KEY;
-  console.log('key:',apiKey)
+
  
   try {
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        
-        'Authorization': `Bearer ${apiKey}` , 
+        //"Authorization": `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        providers: 'openai',
-        text: prompt,
-        resolution: '512x512',
-        num_images: 1,
+       key: `${apiKey}`,
+       prompt: prompt,
+       width: "512",
+       height: "512",
+       samples: "1",
+  
       }),
     });
 
@@ -24,7 +25,8 @@ export const generateImage = async (prompt) => {
     }
 
     const data = await response.json();
-    const imageUrl = data.openai.items[0].image_resource_url;
+    console.log(data.output[0])
+    const imageUrl = data.output[0];
 
     return imageUrl;
   } catch (error) {
